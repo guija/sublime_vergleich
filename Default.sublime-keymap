@@ -1,0 +1,6 @@
+[
+    {"keys": ["ctrl+."], "command": "goto_next_difference"},
+    {"keys": ["ctrl+,"], "command": "goto_prev_difference"},
+    {"keys": ["ctrl+shift+."], "command": "merge_right"},
+    {"keys": ["ctrl+shift+,"], "command": "merge_left"}
+]

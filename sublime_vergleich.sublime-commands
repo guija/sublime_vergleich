@@ -1,0 +1,9 @@
+[
+    { "caption": "VERGLEICH: Compare to view ...", "command": "compare_to_view" },
+    { "caption": "VERGLEICH: Go to next difference", "command": "goto_next_difference" },
+    { "caption": "VERGLEICH: Go to previous difference", "command": "goto_prev_difference" },
+    { "caption": "VERGLEICH: Compare to clipboard", "command": "compare_to_clipboard" },
+    { "caption": "VERGLEICH: Close diff view", "command": "close_diff_view" },
+    { "caption": "VERGLEICH: Merge right", "command": "merge_right" },
+    { "caption": "VERGLEICH: Merge left", "command": "merge_left" }
+]

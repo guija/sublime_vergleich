@@ -1,0 +1,20 @@
+[
+{
+    "id": "edit",
+    "children":
+    [
+        {
+        	"id": "vergleich",
+        	"caption" : "VERGLEICH",
+        	"children": [
+        		{ "caption" : "VERGLEICH: With View", "command": "compare_to_view" },
+		        { "caption" : "VERGLEICH: With Clipboard", "command": "compare_to_clipboard" },
+		        { "caption" : "VERGLEICH: Next Difference", "command": "goto_next_difference" },
+		        { "caption" : "VERGLEICH: Previous Difference", "command": "goto_prev_difference" },
+		        { "caption" : "VERGLEICH: Left to right", "command": "merge_right" },
+		        { "caption" : "VERGLEICH: Right to left", "command": "merge_left" },
+        	]
+        }
+    ]
+}
+]
