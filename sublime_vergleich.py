@@ -160,7 +160,7 @@ class DiffSession:
 			    ]
 			})
 
-	def highlightDiff(self, index):
+	def highlightCurrentDiff(self, index):
 
 		leftRegion = self.leftRegions[index]
 		rightRegion = self.rightRegions[index]
@@ -258,7 +258,7 @@ class GotoNextDifferenceCommand(sublime_plugin.TextCommand):
 			else:
 				diffSession.currentRegionIndex = (diffSession.currentRegionIndex+1) % len(diffSession.leftRegions)
 
-			diffSession.highlightDiff(diffSession.currentRegionIndex)
+			diffSession.highlightCurrentDiff(diffSession.currentRegionIndex)
 
 			if (sublime.active_window().active_view().id() == diffSession.leftView.id() or
 				sublime.active_window().active_view().id() == diffSession.rightView.id()):
@@ -280,7 +280,7 @@ class GotoPrevDifferenceCommand(sublime_plugin.TextCommand):
 			else:
 				diffSession.currentRegionIndex = (diffSession.currentRegionIndex-1) % len(diffSession.leftRegions)
 
-			diffSession.highlightDiff(diffSession.currentRegionIndex)
+			diffSession.highlightCurrentDiff(diffSession.currentRegionIndex)
 
 			if (sublime.active_window().active_view().id() == diffSession.leftView.id() or
 				sublime.active_window().active_view().id() == diffSession.rightView.id()):
@@ -612,11 +612,32 @@ class MergeRightCommand(sublime_plugin.TextCommand):
 
 			leftRegion = diffSession.leftRegions[diffSession.currentRegionIndex]
 			leftRegionContent = diffSession.leftView.substr(leftRegion)
-
-			print("left:" + leftRegionContent)
+			leftRegionLength = len(leftRegionContent)
 
 			rightRegion = diffSession.rightRegions[diffSession.currentRegionIndex]
+			rightRegionContent = diffSession.rightView.substr(rightRegion)
+			rightRegionLength = len(rightRegionContent)
+
+			lengthDifference = leftRegionLength - rightRegionLength
+
+			diffSession.rightView.sel().clear()
+			diffSession.rightView.sel().add(rightRegion)
 			diffSession.rightView.replace(edit, rightRegion, leftRegionContent)
+			diffSession.rightView.sel().clear()
+
+			# Adapt all of the regions
+			for i in range(len(diffSession.rightRegions)):
+				currentRegion = diffSession.rightRegions[i]
+				if i == diffSession.currentRegionIndex:
+					diffSession.rightRegions[i] = sublime.Region(currentRegion.begin(), currentRegion.end()+lengthDifference)
+				if i > diffSession.currentRegionIndex:
+					diffSession.rightRegions[i] = sublime.Region(currentRegion.begin()+lengthDifference, currentRegion.end()+lengthDifference)
+				else:
+					# do nothing, this are the regions before the change
+					pass
+
+			diffSession.rightView.add_regions("VERGLEICH_REGIONS", diffSession.rightRegions, "invalid.deprecated", "", sublime.DRAW_NO_OUTLINE)
+			diffSession.highlightCurrentDiff(diffSession.currentRegionIndex)
 
 		else:
 			# todo error no active session, please activate a diff session 
@@ -632,13 +653,34 @@ class MergeLeftCommand(sublime_plugin.TextCommand):
 				print("NOT AT ANY REGION YET, TO TO A DIFF!!")
 				return 
 
-			rightRegion = diffSession.rightRegions[diffSession.currentRegionIndex]
-			rightRegionContent = diffSession.leftView.substr(rightRegion)
-
-			print("right: " + rightRegionContent)
-
 			leftRegion = diffSession.leftRegions[diffSession.currentRegionIndex]
-			diffSession.rightView.replace(edit, leftRegion, rightRegionContent)
+			leftRegionContent = diffSession.leftView.substr(leftRegion)
+			leftRegionLength = len(leftRegionContent)
+
+			rightRegion = diffSession.rightRegions[diffSession.currentRegionIndex]
+			rightRegionContent = diffSession.rightView.substr(rightRegion)
+			rightRegionLength = len(rightRegionContent)
+
+			lengthDifference = rightRegionLength - leftRegionLength
+
+			diffSession.leftView.sel().clear()
+			diffSession.leftView.sel().add(leftRegion)
+			diffSession.leftView.replace(edit, leftRegion, rightRegionContent)
+			diffSession.leftView.sel().clear()
+
+			# Adapt all of the regions
+			for i in range(len(diffSession.leftRegions)):
+				currentRegion = diffSession.leftRegions[i]
+				if i == diffSession.currentRegionIndex:
+					diffSession.leftRegions[i] = sublime.Region(currentRegion.begin(), currentRegion.end()+lengthDifference)
+				if i > diffSession.currentRegionIndex:
+					diffSession.leftRegions[i] = sublime.Region(currentRegion.begin()+lengthDifference, currentRegion.end()+lengthDifference)
+				else:
+					# do nothing, this are the regions before the change
+					pass
+
+			diffSession.leftView.add_regions("VERGLEICH_REGIONS", diffSession.leftRegions, "invalid.deprecated", "", sublime.DRAW_NO_OUTLINE)
+			diffSession.highlightCurrentDiff(diffSession.currentRegionIndex)
 
 		else:
 			# todo error no active session, please activate a diff session 
