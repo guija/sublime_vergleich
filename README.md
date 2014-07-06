@@ -1,4 +1,5 @@
-sublime_vergleich
+Sublime Vergleich
 =================
 
-A diff and merge plugin for sublime text
+Sublime Vergleich is a free but powerful Diff and Merge tool for the text editor Sublime Text.
+
