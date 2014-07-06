@@ -3,6 +3,8 @@
 
 "Sublime Vergleich" is a free but powerful Diff and Merge tool for the text editor Sublime Text.
 
+![Alt text](http://netzauftrag.com/sublime_vergleich_1.png)
+
 Features
 --------------
 Sublime Vergleich offers following features:
